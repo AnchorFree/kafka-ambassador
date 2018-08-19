@@ -4,10 +4,12 @@ import (
 	"fmt"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 type T struct {
-	Producer *kafka.Producer
+	Producer   *kafka.Producer
+	Prometheus *prometheus.Registry
 }
 
 func (p *T) Init(kafkaParams *kafka.ConfigMap) error {

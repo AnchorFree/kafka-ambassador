@@ -73,6 +73,12 @@
   version = "v1.6.2"
 
 [[projects]]
+  name = "github.com/grpc-ecosystem/go-grpc-prometheus"
+  packages = ["."]
+  revision = "c225b8c3b01faf2899099b768856a9e916e5087b"
+  version = "v1.2.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/hashicorp/hcl"
   packages = [
@@ -127,7 +133,10 @@
 
 [[projects]]
   name = "github.com/prometheus/client_golang"
-  packages = ["prometheus"]
+  packages = [
+    "prometheus",
+    "prometheus/promhttp"
+  ]
   revision = "c5b7fccd204277076155f10851dad72b76a49317"
   version = "v0.8.0"
 
@@ -313,6 +322,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4c124cf03385ae22d84c934bb84a9fc5c1cf0b8dde58f1671dc694ed39b2512f"
+  inputs-digest = "0fd8d525812c4fa0c4d752c8ce1f651e7fcdb60b660029feb4abe89044650859"
   solver-name = "gps-cdcl"
   solver-version = 1

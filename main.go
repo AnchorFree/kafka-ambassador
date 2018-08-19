@@ -6,6 +6,7 @@ import (
 
 	"github.com/anchorfree/kafka-ambassador/pkg/config"
 	"github.com/anchorfree/kafka-ambassador/pkg/servers"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (
@@ -17,6 +18,8 @@ var (
 		"kafka.batch.num.messages":                    100000,
 		"kafka.max.in.flight.requests.per.connection": 20,
 		"server.grpc.max.request.size":                4 * 1024 * 1024,
+		"server.grpc.monitoring.histogram.enable":     true,
+		"server.grpc.monitoring.enable":               true,
 	}
 )
 
@@ -36,6 +39,7 @@ func main() {
 	if err != nil {
 		return
 	}
+	s.Prometheus = prometheus.NewRegistry()
 
 	kafkaParams, err := config.KafkaParams(s.Config)
 	if err != nil {

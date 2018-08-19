@@ -3,6 +3,8 @@ server:
     listen: "0.0.0.0:18080"
   grpc:
     listen: "0.0.0.0:18282"
+  monitoring:
+    listen: "0.0.0.0:28080"
 kafka:
     brokers:
         - "127.0.0.1:9092"
