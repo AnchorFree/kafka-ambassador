@@ -45,6 +45,6 @@ func main() {
 	if err != nil {
 		return
 	}
-	s.Producer.Init(&kafkaParams)
+	s.Producer.Init(&kafkaParams, s.Prometheus)
 	s.Start()
 }
