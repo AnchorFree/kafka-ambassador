@@ -1,21 +1,26 @@
 package kafka
 
 import (
+	"github.com/anchorfree/kafka-ambassador/pkg/logger"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
 type T struct {
 	Producer *kafka.Producer
+	Logger   logger.Logger
 }
 
 func (p *T) Init(kafkaParams *kafka.ConfigMap, prom *prometheus.Registry) error {
 	var err error
+	p.Logger.Info("Creating Kafka producer")
 	p.Producer, err = kafka.NewProducer(kafkaParams)
 	if err != nil {
+		p.Logger.Errorf("Could not create kafka producer due to: %v", err)
 		return err
 	}
 	registerMetrics(prom)
+	p.Logger.Info("Starting up kafka events tracker")
 	go func() {
 		for e := range p.Producer.Events() {
 			switch ev := e.(type) {
@@ -26,6 +31,7 @@ func (p *T) Init(kafkaParams *kafka.ConfigMap, prom *prometheus.Registry) error 
 						"topic": *m.TopicPartition.Topic,
 						"error": m.TopicPartition.Error.Error()}).Inc()
 					// TODO: add message dump of m.Value into log, if WAL is not enabled
+					p.Logger.Infof("could not send message to kafka due to: %s", m.TopicPartition.Error.Error())
 				} else {
 					msgOK.With(prometheus.Labels{"topic": *m.TopicPartition.Topic}).Inc()
 				}

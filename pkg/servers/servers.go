@@ -24,6 +24,7 @@ func (s *T) Start() {
 			Producer:   s.Producer,
 			Config:     s.Config,
 			Prometheus: s.Prometheus,
+			Logger:     s.Logger,
 			Wg:         s.Wg,
 		}
 		monitSrv.Start(monitoringPath)
@@ -33,6 +34,7 @@ func (s *T) Start() {
 			Producer:   s.Producer,
 			Config:     s.Config,
 			Prometheus: s.Prometheus,
+			Logger:     s.Logger,
 			Wg:         s.Wg,
 		}
 		httpSrv.Start(httpPath)
@@ -44,6 +46,7 @@ func (s *T) Start() {
 			Producer:   s.Producer,
 			Config:     s.Config,
 			Prometheus: s.Prometheus,
+			Logger:     s.Logger,
 			Wg:         s.Wg,
 		}
 		grpcSrv.Start(grpcPath)

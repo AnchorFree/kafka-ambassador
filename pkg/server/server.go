@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/anchorfree/kafka-ambassador/pkg/kafka"
+	"github.com/anchorfree/kafka-ambassador/pkg/logger"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/spf13/viper"
 )
@@ -17,6 +18,7 @@ type I interface {
 
 type T struct {
 	Producer   kafka.T
+	Logger     logger.Logger
 	Prometheus *prometheus.Registry
 	Config     *viper.Viper
 	Wg         *sync.WaitGroup

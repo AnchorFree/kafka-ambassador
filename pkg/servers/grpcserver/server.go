@@ -6,7 +6,6 @@ import (
 
 	"github.com/anchorfree/kafka-ambassador/pkg/server"
 	pb "github.com/anchorfree/kafka-ambassador/pkg/servers/grpcserver/pb"
-	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
@@ -18,10 +17,11 @@ func (s *Server) Start(configPath string) {
 	addr := c.GetString("listen")
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		s.Logger.Fatal(err.Error())
 	}
 
 	if s.Config.GetBool(configPath + ".monitoring.enable") {
+		s.Logger.Info("Monitoring is enabled, applying GRPC interceptors")
 		// Create a gRPC Server with gRPC interceptor.
 		grpcSrv = grpc.NewServer(
 			grpc.StreamInterceptor(grpcMetrics.StreamServerInterceptor()),
@@ -36,6 +36,7 @@ func (s *Server) Start(configPath string) {
 			grpcMetrics.EnableHandlingTimeHistogram()
 		}
 	} else {
+		s.Logger.Info("Monitoring is NOT enabled, enable it if you would like to see prometheus metrics")
 		grpcSrv = grpc.NewServer(
 			grpc.MaxMsgSize(s.Config.GetInt(configPath + ".max.request.size")),
 		)
@@ -43,11 +44,11 @@ func (s *Server) Start(configPath string) {
 	}
 	pb.RegisterKafkaAmbassadorServer(grpcSrv, s)
 
-	log.Printf("Listening for GRPC requests on %s...\n", addr)
+	s.Logger.Infof("Listening for GRPC requests on %s", addr)
 
 	go func() {
 		if err = grpcSrv.Serve(lis); err != nil {
-			log.Fatalf("failed to serve: %v", err)
+			s.Logger.Fatalf("failed to serve: %v", err)
 		}
 	}()
 	s.Wg.Add(1)
@@ -65,7 +66,7 @@ func (s *Server) Produce(stream pb.KafkaAmbassador_ProduceServer) error {
 		res = &pb.ProdRs{StreamOffset: req.StreamOffset}
 		err = stream.Send(res)
 		if err != nil {
-			log.Errorf("Could not stream (GRPC) to the client: %s", err)
+			s.Logger.Errorf("Could not stream (GRPC) to the client: %s", err)
 			return err
 		}
 	}

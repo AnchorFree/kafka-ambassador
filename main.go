@@ -5,14 +5,18 @@ import (
 	"sync"
 
 	"github.com/anchorfree/kafka-ambassador/pkg/config"
+	"github.com/anchorfree/kafka-ambassador/pkg/logger"
 	"github.com/anchorfree/kafka-ambassador/pkg/servers"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (
 	defaults map[string]interface{} = map[string]interface{}{
-		// "global.log.level":                            log.InfoLevel.String(),
-		"global.log.format":                           "json",
+		"global.log.level":                            "info",
+		"global.log.encoding":                         "json",
+		"global.log.outputPaths":                      ("stdout"),
+		"global.log.errorOutputPaths":                 ("stderr"),
+		"global.log.encoderConfig":                    logger.NewEncoderConfig(),
 		"server.http.listen":                          ":19092",
 		"kafka.compression.codec":                     "gzip",
 		"kafka.batch.num.messages":                    100000,
@@ -39,12 +43,22 @@ func main() {
 	if err != nil {
 		return
 	}
+	// logs
+	cfg := logger.NewLogConfig(s.Config.Sub("global.log"))
+	logger, err := cfg.Build()
+	if err != nil {
+		panic(err)
+	}
+	s.Logger = logger.Sugar()
+	// metrics
 	s.Prometheus = prometheus.NewRegistry()
 
+	// servers
 	kafkaParams, err := config.KafkaParams(s.Config)
 	if err != nil {
 		return
 	}
+	s.Producer.Logger = s.Logger
 	s.Producer.Init(&kafkaParams, s.Prometheus)
 	s.Start()
 }
