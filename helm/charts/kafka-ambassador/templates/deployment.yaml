@@ -1,0 +1,143 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "kafka-ambassador.fullname" . }}-vault-agent
+  annotations:
+    deprecation-notice: |
+      This configmap is the hack which is allowed to use stock vault-k8s image unless it will have support of the custom puth for auth backend
+      PR with changes https://github.com/hashicorp/vault-k8s/pull/23 planned for 0.2.0
+data:
+  config.hcl: |
+    "auto_auth" = {
+      "method" = {
+        "type" = "kubernetes"
+        "mount_path" = "auth/k8s-test-sat"
+
+        "config" = {
+          "role" = "kafka-ambassador"
+        }
+      }
+
+      "sink" = {
+        "config" = {
+          "path" = "/home/vault/.token"
+        }
+        "type" = "file"
+      }
+    }
+
+    "exit_after_auth" = false
+    "pid_file" = "/home/vault/.pid"
+
+    "template" = {
+      "contents" = "{{`{{- with secret \"kafka-pki/issue/kafka-client\" \"common_name=test-sat-gpr-static-common-name\" -}}{{ .Data.issuing_ca }}{{- end }}`}}"
+      "destination" = "/vault/secrets/kafka-pki/ca.crt"
+    }
+
+    "template" = {
+      "contents" = "{{`{{- with secret \"kafka-pki/issue/kafka-client\" \"common_name=test-sat-gpr-static-common-name\" -}}{{ .Data.certificate }}{{- end }}`}}"
+      "destination" = "/vault/secrets/kafka-pki/kafka-client.crt"
+    }
+
+    "template" = {
+      "contents" = "{{`{{- with secret \"kafka-pki/issue/kafka-client\" \"common_name=test-sat-gpr-static-common-name\" -}}{{ .Data.private_key }}{{- end }}`}}"
+      "destination" = "/vault/secrets/kafka-pki/kafka-client.key"
+    }
+
+    "vault" = {
+      "address" = "https://vault.afdevops.com"
+    }
+  config-init.hcl: |
+    "auto_auth" = {
+      "method" = {
+        "type" = "kubernetes"
+        "mount_path" = "auth/k8s-test-sat"
+
+        "config" = {
+          "role" = "kafka-ambassador"
+        }
+      }
+
+      "sink" = {
+        "config" = {
+          "path" = "/home/vault/.token"
+        }
+        "type" = "file"
+      }
+    }
+
+    "exit_after_auth" = true
+    "pid_file" = "/home/vault/.pid"
+
+    "template" = {
+      "contents" = "{{`{{- with secret \"kafka-pki/issue/kafka-client\" \"common_name=test-sat-gpr-static-common-name\" -}}{{ .Data.issuing_ca }}{{- end }}`}}"
+      "destination" = "/vault/secrets/kafka-pki/ca.crt"
+    }
+
+    "template" = {
+      "contents" = "{{`{{- with secret \"kafka-pki/issue/kafka-client\" \"common_name=test-sat-gpr-static-common-name\" -}}{{ .Data.certificate }}{{- end }}`}}"
+      "destination" = "/vault/secrets/kafka-pki/kafka-client.crt"
+    }
+
+    "template" = {
+      "contents" = "{{`{{- with secret \"kafka-pki/issue/kafka-client\" \"common_name=test-sat-gpr-static-common-name\" -}}{{ .Data.private_key }}{{- end }}`}}"
+      "destination" = "/vault/secrets/kafka-pki/kafka-client.key"
+    }
+
+    "vault" = {
+      "address" = "https://vault.afdevops.com"
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kafka-ambassador.fullname" . }}
+  labels:
+    {{- include "kafka-ambassador.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kafka-ambassador.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kafka-ambassador.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-configmap: "{{ include "kafka-ambassador.fullname" . }}-vault-agent"
+        # Currently vault-k8s dosn't support not default mount_path for kubernetes auth backend
+        # We need to use custom configmap unless https://github.com/hashicorp/vault-k8s/pull/23
+        #vault.hashicorp.com/agent-inject-secret-kafka-pki: "/path/to/secret"
+        #vault.hashicorp.com/role: "kafka-ambassador"
+    spec:
+      serviceAccountName: {{ include "kafka-ambassador.serviceAccountName" . }}
+      containers:
+      - name: kafka-ambassador
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        args:
+        - /bin/kafka-ambassador
+        - -config
+        - /etc/kafka-ambassador/config.yaml
+        ports:
+        - name: http-port
+          containerPort: 18080
+        - name: grpc-port
+          containerPort: 19094
+        - name: exporter-port
+          containerPort: 28080
+
+        volumeMounts:
+        - name: {{ include "kafka-ambassador.fullname" . }}
+          mountPath: /etc/kafka-ambassador
+        - name: ka-ula-wal
+          mountPath: /data/wal
+
+      volumes:
+      - name: {{ include "kafka-ambassador.fullname" . }}
+        configMap:
+          name: {{ include "kafka-ambassador.fullname" . }}
+      - name: ka-ula-wal
+        emptyDir: {}

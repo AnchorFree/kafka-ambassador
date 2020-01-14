@@ -1,0 +1,11 @@
+image:
+  repository: anchorfree/kafka-ambassador
+  tag: v0.5.0
+
+replicaCount: 1
+
+serviceAccount:
+  create: true
+
+service:
+  type: ClusterIP
