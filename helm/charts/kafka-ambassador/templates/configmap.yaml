@@ -26,13 +26,7 @@ data:
          - test1
     kafka:
         brokers:
-            - "kafka-prod-us-or-01-01.prod.afdata.io:19093"
-            - "kafka-prod-us-or-01-02.prod.afdata.io:19093"
-            - "kafka-prod-us-or-01-03.prod.afdata.io:19093"
-            - "kafka-prod-us-or-01-04.prod.afdata.io:19093"
-            - "kafka-prod-us-or-01-05.prod.afdata.io:19093"
-            - "kafka-prod-us-or-01-06.prod.afdata.io:19093"
-            - "kafka-prod-us-or-01-07.prod.afdata.io:19093"
+{{ toYaml .Values.kafka.brokers | indent 12 }}
         # possible configuration parameters are:
         # https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
         "compression.codec": "gzip"

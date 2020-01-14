@@ -2,6 +2,16 @@ image:
   repository: anchorfree/kafka-ambassador
   tag: v0.4.5
 
+kafka:
+  brokers:
+    - "kafka-prod-us-or-01-01.prod.afdata.io:19093"
+    - "kafka-prod-us-or-01-02.prod.afdata.io:19093"
+    - "kafka-prod-us-or-01-03.prod.afdata.io:19093"
+    - "kafka-prod-us-or-01-04.prod.afdata.io:19093"
+    - "kafka-prod-us-or-01-05.prod.afdata.io:19093"
+    - "kafka-prod-us-or-01-06.prod.afdata.io:19093"
+    - "kafka-prod-us-or-01-07.prod.afdata.io:19093"
+
 replicaCount: 1
 
 serviceAccount:
