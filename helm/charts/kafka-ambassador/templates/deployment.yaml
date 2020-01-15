@@ -5,7 +5,7 @@ metadata:
   name: {{ include "kafka-ambassador.fullname" . }}-vault-agent
   annotations:
     deprecation-notice: |
-      This configmap is the hack which is allowed to use stock vault-k8s image unless it will have support of the custom puth for auth backend
+      This configmap is the hack which is allowed to use a stock vault-k8s image unless it will have the support of the custom path for auth backend
       PR with changes https://github.com/hashicorp/vault-k8s/pull/23 planned for 0.2.0
 data:
   config.hcl: |
