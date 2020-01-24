@@ -1,0 +1,32 @@
+---
+name: Deploy Release
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build and Publish Docker Image
+      id: docker
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        dockerfile: build/Dockerfile
+        name: anchorfree/kafka-ambassador
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Deploy to Kubernetes Cluster
+      uses: deliverybot/helm@v1
+      with:
+        helm: helm3
+        release: kafka-ambassador
+        namespace: gpr
+        chart: deployments/helm/charts/kafka-ambassador
+        values: |
+          replicaCount: 2
+          image:
+            tag: ${{ steps.docker.outputs.tag }}
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'

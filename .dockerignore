@@ -1,0 +1,5 @@
+/build/Dockerfile
+/.github
+/.dockerignore
+/.idea
+/kafka-ambassador

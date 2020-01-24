@@ -30,7 +30,6 @@ COPY . .
 RUN go test ./... \
  && go build -o /go/bin/kaffka-ambassador
 
-
 # Final container stage
 FROM ubuntu:16.04
 

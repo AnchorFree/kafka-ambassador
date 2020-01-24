@@ -1,0 +1,11 @@
+# Assuming helm3 points to helm_v3 binary.
+#
+# Usage:
+#  helmfile -b helm3 lint
+#  helmfile -b helm3 diff
+#  helmfile -b helm3 apply
+releases:
+- name: ula-edge
+  namespace: gpr
+  chart: ./charts/kafka-ambassador
+  missingFileHandler: Error
