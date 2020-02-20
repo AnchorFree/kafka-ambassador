@@ -24,6 +24,6 @@ require (
 	github.com/valyala/fastjson v1.4.1
 	go.uber.org/ratelimit v0.0.0-20180316092928-c15da0234277
 	go.uber.org/zap v1.9.1
-	google.golang.org/grpc v1.20.1
+	google.golang.org/grpc v1.27.1
 	gopkg.in/yaml.v2 v2.2.2
 )
