@@ -7,7 +7,7 @@ require (
 	github.com/confluentinc/confluent-kafka-go v1.0.0
 	github.com/dgraph-io/badger/v2 v2.0.1-rc1
 	github.com/gogo/protobuf v1.2.1
-	github.com/golang/protobuf v1.3.1
+	github.com/golang/protobuf v1.3.3
 	github.com/gorilla/mux v1.7.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/imdario/mergo v0.3.7
