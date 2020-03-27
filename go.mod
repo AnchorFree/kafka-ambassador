@@ -5,7 +5,7 @@ go 1.12
 require (
 	github.com/anchorfree/data-go v0.0.0-20190515143140-edabe141ac15
 	github.com/confluentinc/confluent-kafka-go v1.0.0
-	github.com/dgraph-io/badger/v2 v2.0.1-rc1
+	github.com/dgraph-io/badger/v2 v2.0.3-rc1
 	github.com/gogo/protobuf v1.2.1
 	github.com/golang/protobuf v1.3.1
 	github.com/gorilla/mux v1.7.0
