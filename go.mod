@@ -17,7 +17,7 @@ require (
 	github.com/prometheus/client_model v0.0.0-20180712105110-5c3871d89910
 	github.com/prometheus/common v0.0.0-20181126121408-4724e9255275
 	github.com/sony/gobreaker v0.0.0-20180905101324-b2a34562d02c
-	github.com/spf13/viper v1.3.2
+	github.com/spf13/viper v1.6.3
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/stretchr/testify v1.4.0
 	github.com/syndtr/goleveldb v1.0.0
