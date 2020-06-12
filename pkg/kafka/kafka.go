@@ -310,12 +310,12 @@ func (p *T) Send(topic string, message []byte) {
 		p.produce(topic, message, Direct)
 		if (p.Config.WalMode == Always && !p.isDisableWal(topic)) || p.isAlwaysWal(topic) {
 			p.Logger.Debugf("Storing message to topic: %s into WAL", topic)
-			p.wal.Set(topic, message)
+			_ = p.wal.Set(topic, message)
 		}
 		msgSent.With(prometheus.Labels{"topic": topic}).Inc()
 	} else {
 		p.Logger.Debugf("Storing message to topic: %s into WAL as CB is not ready", topic)
-		p.wal.Set(topic, message)
+		_ = p.wal.Set(topic, message)
 	}
 }
 
@@ -356,12 +356,12 @@ func (p *T) producerEventsHandler() {
 				p.Logger.Debugf("could not send message to kafka due to: %s", m.TopicPartition.Error.Error())
 				// we store messages which can be retried only
 				if canRetry(m.TopicPartition.Error) {
-					p.wal.Set(*m.TopicPartition.Topic, m.Value)
+					_ = p.wal.Set(*m.TopicPartition.Topic, m.Value)
 				} else {
 					// we could put the message into some malformed topic or similar
 					crc := wal.Uint32ToBytes(wal.CrcSum(m.Value))
 					p.Logger.Infof("Dropped message CRC: %s as we can't retry it due to: %s", string(crc), m.TopicPartition.Error.Error())
-					p.wal.Del(crc)
+					_ = p.wal.Del(crc)
 					msgDropped.With(prometheus.Labels{
 						"topic": *m.TopicPartition.Topic,
 						"error": m.TopicPartition.Error.Error()}).Inc()
@@ -378,7 +378,7 @@ func (p *T) producerEventsHandler() {
 				if m.Opaque == FromWAL || p.isAlwaysWal(*m.TopicPartition.Topic) {
 					crc := wal.Uint32ToBytes(wal.CrcSum(m.Value))
 					p.Logger.Debugf("removing CRC: %s", string(crc))
-					p.wal.Del(crc)
+					_ = p.wal.Del(crc)
 				}
 				if err != nil {
 					// We are not allowed to do anything
