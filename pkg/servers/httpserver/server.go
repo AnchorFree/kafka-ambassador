@@ -54,7 +54,7 @@ func (s *Server) Start(configPath string) {
 	s.Wg.Wait()
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	httpServer.Shutdown(ctx)
+	_ = httpServer.Shutdown(ctx)
 	close(s.Done)
 }
 

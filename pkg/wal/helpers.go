@@ -14,7 +14,7 @@ var crcTable = crc32.MakeTable(crc32.Castagnoli)
 
 func CrcSum(data []byte) uint32 {
 	crc := crc32.New(crcTable)
-	crc.Write(data)
+	_, _ = crc.Write(data)
 	return crc.Sum32()
 }
 

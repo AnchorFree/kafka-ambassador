@@ -101,7 +101,7 @@ func New(conf Config, prom *prometheus.Registry, logger logger.Logger) (*Wal, er
 				if c < w.config.WriteBatchSize {
 					// WriteBatch API has changed:
 					// https://github.com/dgraph-io/badger/commit/cd5884e0e8ebe92de4afa8f543a8120b40551e5f
-					batch.Set(kv.k, kv.v)
+					_ = batch.Set(kv.k, kv.v)
 					c++
 				} else {
 					flush()
@@ -176,8 +176,8 @@ func (w *Wal) FlushDeletes() error {
 }
 
 func (w *Wal) Close() error {
-	w.FlushWrites()
-	w.FlushDeletes()
+	_ = w.FlushWrites()
+	_ = w.FlushDeletes()
 
 	// Close BadgerDB
 	return w.storage.Close()

@@ -84,7 +84,7 @@ func (p *T) handleConnection(c net.Conn) {
 				if err != io.EOF {
 					fmt.Printf("Error reading from client connection: %v\n", err)
 				}
-				dstConn.Close()
+				_ = dstConn.Close()
 				break
 			}
 		}
@@ -101,17 +101,17 @@ func (p *T) handleConnection(c net.Conn) {
 		}
 		if err != nil {
 			fmt.Printf("Error reading from dst connection: %v\n", err)
-			dstConn.Close()
+			_ = dstConn.Close()
 			break
 		}
 	}
-	dstConn.Close()
+	_ = dstConn.Close()
 }
 
 func (p *T) Close() {
 	p.closed = true
-	p.Ln.Close()
+	_ = p.Ln.Close()
 	for _, c := range p.conns {
-		c.Close()
+		_ = c.Close()
 	}
 }

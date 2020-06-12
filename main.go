@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -81,7 +82,7 @@ func main() {
 		return
 	}
 	//separate config read for wal. This is to be refactored
-	data, err := ioutil.ReadFile(configPathName)
+	data, err := ioutil.ReadFile(filepath.Clean(configPathName))
 	if err != nil {
 		panic("could not read config file")
 	}
@@ -110,7 +111,7 @@ func main() {
 			if err != nil {
 				s.Logger.Errorf("ERROR. Could not create producer on SIGHUP due to: %v", err)
 			} else {
-				s.Producer.AddActiveProducer(kp, &kafkaParams)
+				_ = s.Producer.AddActiveProducer(kp, &kafkaParams)
 			}
 		case syscall.SIGTERM, syscall.SIGINT:
 			s.Stop()

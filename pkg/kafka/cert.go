@@ -5,13 +5,14 @@ import (
 	"encoding/pem"
 	"errors"
 	"io/ioutil"
+	"path/filepath"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 func CertExpirationTime(path string) (time.Time, error) {
-	pemData, err := ioutil.ReadFile(path)
+	pemData, err := ioutil.ReadFile(filepath.Clean(path))
 	if err != nil {
 		return time.Unix(0, 0), err
 	}
