@@ -73,6 +73,8 @@ github.com/onsi/ginkgo v1.7.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+W
 github.com/onsi/gomega v1.4.3/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1CpauHY=
 github.com/optiopay/kafka v2.0.5+incompatible h1:ka5l2o9tSkbDTZ9JbzXqRDG6aZhgOxbVp1M4QDlYGfk=
 github.com/optiopay/kafka v2.0.5+incompatible/go.mod h1:+j8QXtnwphDeotPJadizkD7zY32Aa0/017iz+r4ToEQ=
+github.com/optiopay/kafka v2.0.7+incompatible h1:zSaLcSlulSRr/E75WOwKMSK4+mMOcjZLYhOZ71RUGac=
+github.com/optiopay/kafka v2.0.7+incompatible/go.mod h1:+j8QXtnwphDeotPJadizkD7zY32Aa0/017iz+r4ToEQ=
 github.com/oschwald/geoip2-golang v1.2.1/go.mod h1:0LTTzix/Ao1uMvOhAV4iLU0Lz7eCrP94qZWBTDKf0iE=
 github.com/oschwald/maxminddb-golang v1.3.0/go.mod h1:3jhIUymTJ5VREKyIhWm66LJiQt04F0UCDdodShpjWsY=
 github.com/pelletier/go-toml v1.2.0 h1:T5zMGML61Wp+FlcbWjRDT7yAxhJNAiPPLOFECq181zc=
