@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.12.4 AS builder
+FROM golang:1.14.6 AS builder
 
 # install libssl
 RUN curl -L http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u12_amd64.deb -o libssl.deb \
