@@ -21,7 +21,7 @@ require (
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/stretchr/testify v1.4.0
 	github.com/syndtr/goleveldb v1.0.0
-	github.com/valyala/fastjson v1.4.1
+	github.com/valyala/fastjson v1.5.4
 	go.uber.org/ratelimit v0.0.0-20180316092928-c15da0234277
 	go.uber.org/zap v1.9.1
 	google.golang.org/grpc v1.20.1
